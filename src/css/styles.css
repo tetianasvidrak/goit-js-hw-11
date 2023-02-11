@@ -14,13 +14,6 @@ body {
   line-height: 1.5;
 }
 
-#search-box {
-  font: inherit;
-  padding: 8px;
-  max-width: 320px;
-  margin-bottom: 16px;
-}
-
 .search-form {
   background-color: #63b1ed;
   height: 60px;
@@ -107,7 +100,6 @@ img {
   transition: background-color .3s ease-in-out;
 }
 .load-more:hover {
-
   background-color: #29a2ff;
 }
 
