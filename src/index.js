@@ -16,18 +16,18 @@ let photoName = '';
 let lightBox;
 
 const onLoadMoreHandler = async () => {
-  if (perPage * pageNumber >= photos.totalHits) {
-    btnRef.classList.remove('load-more-visible');
-    return Notiflix.Notify.failure(
-      "We're sorry, but you've reached the end of search results."
-    );
-  }
   pageNumber += 1;
   photos = await fetchPhotos(photoName, pageNumber).then(
     response => response.data
   );
   onRenderData(photos);
   lightBox.refresh();
+  if (perPage * pageNumber >= photos.totalHits) {
+    btnRef.classList.remove('load-more-visible');
+    return Notiflix.Notify.failure(
+      "We're sorry, but you've reached the end of search results."
+    );
+  }
 };
 
 const onRenderData = photos => {
@@ -62,6 +62,7 @@ const onSubmitFormHandler = async event => {
   btnRef.classList.remove('load-more-visible');
   pageNumber = 1;
   photoName = event.target.elements.searchQuery.value.trim();
+  if (!photoName.length) return;
   try {
     photos = await fetchPhotos(photoName, pageNumber).then(
       response => response.data
@@ -69,15 +70,21 @@ const onSubmitFormHandler = async event => {
   } catch {
     console.log('ERROR');
   }
+  galleryRef.innerHTML = '';
   if (!photos.hits.length) {
     return Notiflix.Notify.failure(
       'Sorry, there are no images matching your search query. Please try again.'
     );
   }
   Notiflix.Notify.success(`Hooray! We found ${photos.totalHits} images.`);
-  galleryRef.innerHTML = '';
   formRef.reset();
   onRenderData(photos);
+  if (perPage * pageNumber >= photos.totalHits) {
+    btnRef.classList.remove('load-more-visible');
+    return Notiflix.Notify.failure(
+      "We're sorry, but you've reached the end of search results."
+    );
+  }
   btnRef.classList.add('load-more-visible');
   lightBox = new SimpleLightbox('.photo-link', {});
 };
